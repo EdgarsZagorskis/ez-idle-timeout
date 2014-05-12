@@ -1,0 +1,24 @@
+{
+    "name": "ez-idle-timout",
+    "version": "0.0.5",
+    "description": "Place a HTML text with redirect to URL that happens on idle timeout. Javascript implementation of user idle timout in Polymer Project",
+    "authors": [
+        "Edgars Zagorskis"
+    ],
+    "main": "dist/ez-idle-timout.html",
+    "readme": "README.md",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/edgarszagorskis/ez-idle-timout.git"
+    },
+    "keywords": [
+        "web-components"
+    ],
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/edgarszagorskis/ez-idle-timout/issues"
+    }
+}

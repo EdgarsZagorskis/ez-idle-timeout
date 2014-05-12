@@ -1,0 +1,82 @@
+<polymer-element name="ez-idle-timeout" attributes="time-show-warning time-idle enabled redirect">
+    <template>
+        <style>
+            #web-component-ez-idle-timeout {
+                background-color: #fcf8e3;
+                border-color: #fbeed5;
+                color: #c09853;
+                padding: 10px;
+                margin-bottom: 20px;
+                position: fixed;
+                z-index:500000000;
+                top: 0;
+                width: '75%';
+            }
+        </style>
+        <div id="web-component-ez-idle-timeout"><button class="close" type="button">×</button><content></content></div>
+    </template>
+    <script>
+        Polymer('ez-idle-timeout', {
+            observe : {
+                enabled : 'triggerEnable'
+
+            },
+            triggerEnable: function(was, is){
+              if (is){
+                  resetIdleCounter();
+                  this.waitForWarning();
+              } else {
+                  clearTimeout(warnTimeout)  ;
+                  this.warnTimeout=null;
+              }
+            },
+            ready: function () {
+                this.warnTimeout = null;
+               this.isTimeout = false;
+
+                this.isEnabled = (attrs.enabled == 'true') ? true : false;
+
+                this.warnTimeout = null, idleStart = null;
+
+                this.resetIdleCounter = function () {
+                    elm.css({'display':'none'});
+                    idleStart = (new Date()).getTime();
+                };
+
+                this.timeoutMinutes = (attrs.timeout > 0) ? attrs.timeout * 60000 : 300000;
+                this.almostTimeoutMinutes = (attrs.timewarn > 0) ? attrs.timewarn * 60000 : 240000;
+                this.timeoutRemainingMinutes = (this.timeoutMinutes - this.almostTimeoutMinutes)/1000;
+                this.waitForWarning = function () {
+                    warnTimeout = setInterval(function () {
+                        if ((new Date()).getTime() - idleStart > this.timeoutMinutes) {
+                            if (this.redirect) {
+                                window.location.href = this.redirect;
+                            }
+                            this.isTimeout = true;
+                            this.isEnabled = false;
+                            this.warnTimeout=null;
+                        } else if ((new Date()).getTime() - idleStart > this.almostTimeoutMinutes) {
+                            this.timeoutRemainingMinutes = ((this.timeoutMinutes - ((new Date()).getTime() - idleStart)) / 600).toFixed();
+                            elm.css({'display':'block'});
+                            this.waitForWarning();
+                        } else {
+                            this.waitForWarning();
+                        }
+                    }, 1000);
+                };
+
+
+                this.getRemainingSeconds = function () {
+                    return           this.timeoutMinutes - (new Date()).getTime() - idleStart;
+                }
+
+                this.body = document.getElementByTagName('body')[0];
+                body.addEventListener('mousemove', function(){
+                    resetIdleCounter();
+                });
+                
+
+            }
+        });
+    </script>
+</polymer-element>
