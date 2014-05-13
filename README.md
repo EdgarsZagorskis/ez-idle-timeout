@@ -1,3 +1,3 @@
 # JS Idle Timeout as a PolymerProject WebComponent
 
-    Version .1 pre-alpha
+    Version .1 alpha
