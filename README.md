@@ -2,7 +2,7 @@
 
 [Demo](http://edgarszagorskis.github.io/ez-idle-timeout)
 
-Place a HTML text with redirect to URL that happens on idle timeout. Javascript implementation of user idle timout in Polymer Project
+Place a HTML text with redirect to URL that happens on idle timeout. Javascript implementation of user idle timeout in Polymer Project
 
 ## Initialize Polymer Platform
 
