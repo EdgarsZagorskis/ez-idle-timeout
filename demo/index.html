@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang=en-us>
+<head>
+    <meta charset=utf-8>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>ez-idle-timeout - JS Idle Timeout as a Polymer-Project WebComponent</title>
+    <meta name=description
+          content="Place a HTML text with redirect to URL that happens on idle timeout. Javascript implementation of user idle timout in Polymer Project">
+    <meta name=viewport content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/foundation/5.2.2/css/foundation.min.css"/>
+</head>
+<body>
+
+<!-- This is actually all you need -->
+
+          <script src="//cdnjs.cloudflare.com/ajax/libs/polymer/0.2.3/platform.js"></script>
+          <script src="//cdnjs.cloudflare.com/ajax/libs/polymer/0.2.3/polymer.js"></script>
+
+          <link rel="import" href="../dist/ez-idle-timout.html">
+          <ez-idle-timeout url="http://edgarszagorskis.github.io" timewarn="5" timeidle="60" interactive>
+              Hey, if you have been idle for 5 seconds. If you don't interact with website, you will be logged out in <span id="web-component-ez-idle-timeout-warning">25</span> seconds
+          </ez-idle-timeout>
+
+<!-- ^^^^ yes, this ----------------->
+
+<nav class="top-bar" data-topbar>
+    <ul class="title-area">
+        <li class="name">
+            <h1><a href="//edgarszagorskis.github.io">edgarszagorskis.github.io</a></h1>
+        </li>
+    </ul>
+
+</nav>
+
+<div class="row">
+    <h1><code>&lt;ez-idle-timeout&gt; Demo</code></h1>
+    <h2>Starts in 5 seconds</h2>
+
+    <div class="large-12 columns">
+        <h3>JS Idle Timeout as a Polymer-Project WebComponent</h3>
+        <p>
+            Place a HTML text with redirect to URL that happens on idle timeout. Javascript implementation of user idle
+            timout in Polymer Project
+        </p>
+        <h4>Initialize Polymer Platform</h4>
+       <pre>
+&lt;script src=&quot;//cdnjs.cloudflare.com/ajax/libs/polymer/0.2.3/platform.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;//cdnjs.cloudflare.com/ajax/libs/polymer/0.2.3/polymer.js&quot;&gt;&lt;/script&gt;
+       </pre>
+        <h4>Include component</h4>
+       <pre>
+&lt;ez-idle-timeout  url="/" timewarn="5" timeidle="25"&gt;
+    Hey, if you have been idle for 5 seconds. If you don't interact with website, you will be redirected to / in 20 seconds
+&lt;/ez-idle-timeout&gt;<br/>
+       </pre>
+
+        <h4>How much time remains?</h4>
+                  <p>It is possible to fetch the timer along with other timestamps.</p>
+        <p>To access timer in global space, add attribute "interactive" (we normally don't want to polute global scope, right?)</p>
+        <pre>
+&lt;ez-idle-timeout  url="/" timewarn="5" timeidle="25" interactive&gt;
+    Now i am accessible from javascript through <code>window.ezIdleTimeout</code> object</code>
+&lt;/ez-idle-timeout&gt;<br/>
+       </pre>
+        <h4>Share, fork, contribute! :D</h4>
+        <a href="https://github.com/EdgarsZagorskis/ez-idle-timout">https://github.com/EdgarsZagorskis/ez-idle-timout</a>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var ticker = setInterval(function(){
+        document.getElementById('web-component-ez-idle-timeout-warning').innerText = parseInt(window.ezIdleTimeout.timeIdle-window.ezIdleTimeout.timeNow) ;
+    },1000);
+</script>
+
+</body>
+</html>

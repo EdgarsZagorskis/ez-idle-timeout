@@ -1,64 +1,91 @@
-<polymer-element name="ez-idle-timeout" attributes="time-show-warning time-idle enabled redirect">
+<polymer-element name="ez-idle-timeout" attributes="url timeidle timewarn interactive">
     <template>
         <style>
             #web-component-ez-idle-timeout {
+                -webkit-transition: opacity .2s;
+                -moz-transition: opacity .2s;
+                -ms-transition: opacity .2s;
+                -o-transition: opacity .2s;
+                transition: opacity .2s;
+                opacity: 0;
                 background-color: #fcf8e3;
                 border-color: #fbeed5;
                 color: #c09853;
-                padding: 10px;
-                margin-bottom: 20px;
+                padding: 1em;
                 position: fixed;
                 z-index: 500000000;
                 top: 0;
-                width: '75%';
+                left: 25%;
+                width: 50%;
+                border-radius: 0 0 .3em .3em;
+                box-shadow: 0 0 3px #c09853;
             }
         </style>
         <div id="web-component-ez-idle-timeout">
-            <button class="close" type="button">×</button>
             <content></content>
         </div>
     </template>
     <script>
         Polymer('ez-idle-timeout', {
-            observe: {
-                enabled: 'triggerEnable'
-            },
-            triggerEnable: function (was, is) {
-                if (is) {
-                    this.tick();
-                } else {
-                    clearTimeout(this.ticker);
-                }
-            },
             ready: function () {
-                console.log('Legen....');
-                var timerStartTime = Number(((new Date()).getTime() / 1000).toFixed());
-                var timeWarning = 5 + timerStartTime;
-                var timeIdle = 10 + timerStartTime;
-                this.tick = function () {
-                    this.ticker = setTimeout(function () {
-                        var timeNow = Number(((new Date()).getTime() / 1000).toFixed());
-                        if (timeNow > timeIdle) {
-                            console.log("...dary!!");
-                            clearTimeout(this.tick);
-                        } else if (timeNow > timeWarning) {
-                            console.log('...waaaaaaait for it...');
+
+                var timers = {
+                    url: this.url ? this.url : '/',
+                    timerStartTime: 0,
+                    waitTimeWarning: this.timewarn ? this.timewarn : 0,
+                    waitTimeIdle: this.timeidle ? this.timeidle : 0,
+                    timeWarning: 0,
+                    timeIdle: 0,
+                    ticker: 0,
+                    timeNow: 0
+                };
+
+                if (this.interactive !== undefined) {
+                    window.ezIdleTimeout = timers;
+                }
+
+                var tick = function () {
+                    timers.ticker = setTimeout(function () {
+                        timers.timeNow = parseInt(((new Date()).getTime() / 1000).toFixed());
+                        if (timers.timeNow > timers.timeIdle) {
+                            clearTimeout(timers.ticker);
+                            window.location.href = timers.url;
+                        } else if (timers.timeNow > timers.timeWarning) {
+                            document.getElementById('web-component-ez-idle-timeout').style.opacity = 1;
                         } else {
-                            console.log('...waaaaait...');
+                            // waiting
                         }
-                        this.tick();
+                        tick();
                     }, 1000);
                 };
-                this.tick();
+
+
+                var startTicker = function () {
+                    timers.timerStartTime = parseInt(((new Date()).getTime() / 1000).toFixed());
+                    timers.timeWarning = parseInt(timers.timerStartTime) + parseInt(timers.waitTimeWarning);
+                    timers.timeIdle = parseInt(timers.timerStartTime) + parseInt(timers.waitTimeIdle);
+                    tick();
+                };
+
+                var resetTicker = function () {
+                    document.getElementById('web-component-ez-idle-timeout').style.opacity = 0;
+                    clearTimeout(timers.ticker);
+                    startTicker();
+                };
+
 
                 var body = document.getElementsByTagName('body')[0];
                 body.addEventListener('mousemove', function () {
-                    console.log('a');
-                });
-                body.addEventListener('keyup', function () {
-                    console.log('a');
+                    resetTicker();
                 });
 
+                body.addEventListener('keyup', function () {
+                    document.getElementById('web-component-ez-idle-timeout').style.opacity = 0;
+                    clearTimeout(timers.ticker);
+                    startTicker();
+                });
+
+                startTicker();
 
             }
         });
